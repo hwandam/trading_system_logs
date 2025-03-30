@@ -1,0 +1,229 @@
+===============================
+비트코인 딥러닝 트레이딩 시스템 작업일지
+날짜: 2025년 3월 29일 (1부)
+===============================
+
+## 1. 수행 작업 요약
+
+1. 데이터베이스 사용자 설정 변경 (trader → trading)
+2. 주요 암호화폐 데이터 수집 작업 완료
+   - KRW-BTC, KRW-ETH, KRW-SOL, KRW-XRP 데이터 수집 완료
+   - 총 593,400개 데이터 수집 (소요시간: 약 30분)
+3. 이전 데이터 수집 결과(2025-03-28) 기록: KRW-ADA, KRW-AVAX, KRW-DOGE, KRW-DOT (총 2,082,800개 데이터)
+4. GPU 리소스 및 시스템 부하 점검
+5. 데이터 수집 프로세스 모니터링 및 진행 상황 추적
+6. 암호화폐 데이터 일관성 유지 작업 진행 (2024년 6월 1일 ~ 2025년 3월 28일)
+7. 데이터 수집 모니터링 스크립트 개발 및 배포
+
+## 2. 데이터베이스 설정 변경 사항
+
+### 2.1 DB 설정 변경
+- 구성 파일 수정:
+  * `deep_learning/config/config.py` 파일의 사용자 설정 변경
+  * 기존 설정: `db_user: str = 'trader'`
+  * 변경 설정: `db_user: str = 'trading'`
+  * 기타 설정 유지: localhost:5432/trading_db, 비밀번호: doking88
+
+- 설정 변경 확인:
+  * 연결 테스트 실행
+  * DB 설정 정상 반영 확인
+  * 변경된 설정으로 정상 연결 확인
+
+## 3. 데이터 수집 작업
+
+### 3.1 데이터 수집 개시
+- 수집 대상:
+  * 암호화폐: KRW-BTC, KRW-ETH, KRW-SOL, KRW-XRP
+  * 타임프레임: minute1, minute5, minute15, minute30, minute60, minute240, day
+  * 수집 기간: 400일 (설정)
+
+- 수집 명령어 실행:
+  * 실행 경로: `/home/trading/trading_system`
+  * 명령어: `python -m collector.main --symbols KRW-BTC,KRW-ETH,KRW-SOL,KRW-XRP --timeframes minute1,minute5,minute15,minute30,minute60,minute240,day --days 400`
+  * 시작 시간: 2025-03-29 09:59:35
+  * 로그 파일: `/home/trading/trading_system/collector/logs/collector_20250329_005935.log`
+
+### 3.2 데이터 수집 진행 상황
+- 데이터 수집 완료:
+  * KRW-BTC, KRW-ETH, KRW-SOL, KRW-XRP 수집 완료
+  * 모든 타임프레임(minute1, minute5, minute15, minute30, minute60, minute240, day) 수집 완료
+  * 총 수집 데이터: 593,400개
+  * 소요 시간: 1,811.70초 (약 30분)
+
+- 수집 완료 상세 내역:
+  * KRW-BTC:
+    - minute1: 1,400개
+    - minute5: 200개
+    - minute15: 200개
+    - minute30: 19,200개
+    - minute60: 9,600개
+    - minute240: 2,600개
+    - day: 400개
+
+  * KRW-ETH:
+    - minute1: 1,400개
+    - minute5: 115,000개
+    - minute15: 38,400개
+    - minute30: 19,200개
+    - minute60: 9,600개
+    - minute240: 2,600개
+    - day: 400개
+
+  * KRW-SOL:
+    - minute1: 1,400개
+    - minute5: 115,000개
+    - minute15: 38,400개
+    - minute30: 19,200개
+    - minute60: 9,600개
+    - minute240: 2,600개
+    - day: 400개
+
+  * KRW-XRP:
+    - minute1: 1,400개
+    - minute5: 115,000개
+    - minute15: 38,400개
+    - minute30: 19,200개
+    - minute60: 9,600개
+    - minute240: 2,600개
+    - day: 400개
+
+- 수집 완료 시간: 2025-03-29 10:31:19
+- 데이터베이스 연결 풀 정상 종료
+- 수집기 리소스 정리 완료
+
+### 3.3 이전 데이터 수집 결과 (2025-03-28)
+- KRW-ADA:
+  * minute1: 395,800개
+  * minute5: 86,200개
+  * minute15: 28,800개
+  * minute30: 14,400개
+  * minute60: 7,200개
+  * day: 400개
+
+- KRW-AVAX:
+  * minute1: 384,400개
+  * minute5: 86,000개
+  * minute15: 28,800개
+  * minute30: 14,400개
+  * minute60: 7,200개
+  * day: 400개
+
+- KRW-DOGE:
+  * minute1: 425,200개
+  * minute5: 86,400개
+  * minute15: 28,800개
+  * minute30: 14,400개
+  * minute60: 7,200개
+  * day: 400개
+
+- KRW-DOT:
+  * minute1: 331,000개
+  * minute5: 84,600개
+  * minute15: 28,800개
+  * minute30: 14,400개
+  * minute60: 7,200개
+  * day: 400개
+
+- 총계:
+  * 총 수집 데이터: 2,082,800개
+  * 소요 시간: 5,721.07초 (약 95분)
+
+### 3.4 데이터베이스 스키마 확인
+- 시장 데이터 테이블 구조:
+  * market_data_1m: 10 컬럼
+  * market_data_5m: 8 컬럼
+  * market_data_15m: 8 컬럼
+  * market_data_30m: 8 컬럼
+  * market_data_1h: 8 컬럼
+  * market_data_4h: 8 컬럼
+  * market_data_1d: 10 컬럼
+  * market_data_day: 8 컬럼
+
+- 지표 데이터 테이블:
+  * market_data_basic_indicators: 21 컬럼
+  * market_data_advanced_indicators: 18 컬럼
+  * market_data_extra_indicators: 18 컬럼
+  * market_data_gap_log: 4 컬럼
+
+### 3.5 데이터베이스 실제 확인 결과 (2025-03-29)
+
+#### 3.5.1 테이블별 데이터 현황
+- market_data_1m:
+  * KRW-BTC: 1,499개 (2025-03-29 12:08 기준)
+  * KRW-ETH: 1,497개
+  * KRW-SOL: 1,497개
+  * KRW-XRP: 1,497개
+  * KRW-ADA: 398,849개
+  * KRW-AVAX: 387,347개
+  * KRW-DOGE: 428,072개
+  * KRW-DOT: 333,180개
+  * KRW-TRX: 43,462개
+
+- market_data_5m:
+  * KRW-BTC: 5,003개 (로그상 200개와 불일치)
+  * KRW-ETH: 115,000개
+  * KRW-SOL: 115,000개
+  * KRW-XRP: 115,000개
+  * (기존) KRW-ADA: 86,200개
+  * (기존) KRW-AVAX: 86,000개
+  * (기존) KRW-DOGE: 86,400개
+  * (기존) KRW-DOT: 84,600개
+
+- market_data_15m:
+  * KRW-BTC: 12,800개 (로그상 200개와 불일치)
+  * KRW-ETH: 38,400개
+  * KRW-SOL: 38,400개
+  * KRW-XRP: 38,400개
+  * (기존) KRW-ADA: 28,800개
+  * (기존) KRW-AVAX: 28,800개
+  * (기존) KRW-DOGE: 28,800개
+  * (기존) KRW-DOT: 28,800개
+
+- market_data_30m:
+  * KRW-BTC: 19,200개
+  * KRW-ETH: 19,200개
+  * KRW-SOL: 19,200개
+  * KRW-XRP: 19,200개
+  * (기존) KRW-ADA: 14,400개
+  * (기존) KRW-AVAX: 14,400개
+  * (기존) KRW-DOGE: 14,400개
+  * (기존) KRW-DOT: 14,400개
+
+- market_data_1h:
+  * KRW-BTC: 9,600개
+  * KRW-ETH: 9,600개
+  * KRW-SOL: 9,600개
+  * KRW-XRP: 9,600개
+  * (기존) KRW-ADA: 7,200개
+  * (기존) KRW-AVAX: 7,200개
+  * (기존) KRW-DOGE: 7,200개
+  * (기존) KRW-DOT: 7,200개
+
+- market_data_4h:
+  * KRW-BTC: 2,600개
+  * KRW-ETH: 2,600개
+  * KRW-SOL: 2,600개
+  * KRW-XRP: 2,600개
+  * (기존) KRW-ADA: 4,895개
+  * (기존) KRW-AVAX: 4,895개
+  * (기존) KRW-DOGE: 4,895개
+  * (기존) KRW-DOT: 4,895개
+
+- market_data_day:
+  * KRW-BTC: 227개 (로그상 400개와 불일치)
+  * KRW-ETH: 227개 (로그상 400개와 불일치)
+  * KRW-SOL: 227개 (로그상 400개와 불일치)
+  * KRW-XRP: 227개 (로그상 400개와 불일치)
+  * KRW-TRX: 119개 (추가 발견)
+
+#### 3.5.2 불일치 사항 분석
+- 로그 기록과 실제 DB 저장 데이터 간 불일치 발견:
+  * BTC 5분봉: 로그 200개 vs DB 5,003개 (+4,803개)
+  * BTC 15분봉: 로그 200개 vs DB 12,800개 (+12,600개)
+  * 일봉 데이터: 로그 400개 vs DB 227개 (-173개)
+  * 추가 코인 발견: KRW-TRX (일봉 119개)
+
+- 예상 원인:
+  * 로그 출력 전 추가 데이터 수집 진행됨
+  * 일봉 데이터 필터링 과정에서 일부 데이터 제외됨
+  * TRX 데이터는 이전 작업에서 수집된 것으로 추정
